@@ -1,0 +1,34 @@
+import googleapiclient.discovery
+
+def youtube_search(api_key, query, max_results=10):
+    youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
+
+    request = youtube.search().list(
+        q=query,
+        part="snippet",
+        type="video",
+        maxResults=max_results
+    )
+
+    response = request.execute()
+
+    videos = []
+    for item in response.get("items", []):
+        video_id = item["id"]["videoId"]
+        title = item["snippet"]["title"]
+        videos.append({"title": title, "video_id": video_id})
+
+    return videos
+
+# Replace 'YOUR_API_KEY' with your actual YouTube Data API key
+api_key = 'https://github.com/googleapis/google-api-python-client/new/main#:~:text=api_key%20%3D%20%27-,YOUR_API_KEY,-%27'
+
+# Replace 'Your Query' with the search query you want
+search_query = 'boy'
+
+# Call the function
+search_results = youtube_search(api_key, search_query)
+
+# Print the results
+for video in search_results:
+    print(f"Title: {video['title']}, Video ID: {video['video_id']}")
